@@ -1,4 +1,3 @@
-
 import { useQuery } from '@tanstack/react-query';
 
 interface YouTubeVideo {
@@ -39,18 +38,33 @@ export const useYouTubeVideos = (searchQuery?: string) => {
         const data = await response.json();
         
         // Transform YouTube API data to our format
-        return (data.videos || data.results || []).map((video: any) => ({
-          id: video.video_id || video.id || Math.random().toString(),
-          title: video.title || 'Untitled Video',
-          description: video.description || '',
-          thumbnail_url: video.thumbnail || video.thumbnails?.[0]?.url || 'https://via.placeholder.com/320x180?text=Video',
-          video_url: `https://www.youtube.com/watch?v=${video.video_id || video.id}`,
-          duration: video.duration || 0,
-          views_count: video.view_count || Math.floor(Math.random() * 1000000),
-          likes_count: video.like_count || Math.floor(Math.random() * 10000),
-          uploader_username: video.channel?.name || video.uploader || 'Unknown Channel',
-          created_at: video.published_time || new Date().toISOString(),
-        }));
+        return (data.videos || data.results || []).map((video: any) => {
+          // Ensure we have a valid date
+          let createdAt = new Date().toISOString();
+          if (video.published_time) {
+            try {
+              const date = new Date(video.published_time);
+              if (!isNaN(date.getTime())) {
+                createdAt = date.toISOString();
+              }
+            } catch {
+              // Keep default date if parsing fails
+            }
+          }
+
+          return {
+            id: video.video_id || video.id || Math.random().toString(),
+            title: video.title || 'Untitled Video',
+            description: video.description || '',
+            thumbnail_url: video.thumbnail || video.thumbnails?.[0]?.url || 'https://via.placeholder.com/320x180?text=Video',
+            video_url: `https://www.youtube.com/watch?v=${video.video_id || video.id}`,
+            duration: video.duration || 0,
+            views_count: video.view_count || Math.floor(Math.random() * 1000000),
+            likes_count: video.like_count || Math.floor(Math.random() * 10000),
+            uploader_username: video.channel?.name || video.uploader || 'Unknown Channel',
+            created_at: createdAt,
+          };
+        });
       } catch (error) {
         console.error('Error fetching YouTube videos:', error);
         // Return mock data if API fails

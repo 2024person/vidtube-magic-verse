@@ -38,6 +38,18 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video, className }) => {
     return `${count} views`;
   };
 
+  const formatCreatedAt = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return 'Recently';
+      }
+      return formatDistanceToNow(date, { addSuffix: true });
+    } catch {
+      return 'Recently';
+    }
+  };
+
   return (
     <Card className={`group cursor-pointer hover:shadow-2xl transition-all duration-300 bg-gray-900/50 border-purple-500/20 backdrop-blur-sm hover:border-cyan-500/50 ${className}`}>
       <Link to={`/watch/${video.id}`}>
@@ -95,7 +107,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video, className }) => {
                 {video.likes_count}
               </div>
               <span>
-                {formatDistanceToNow(new Date(video.created_at), { addSuffix: true })}
+                {formatCreatedAt(video.created_at)}
               </span>
             </div>
           </div>
