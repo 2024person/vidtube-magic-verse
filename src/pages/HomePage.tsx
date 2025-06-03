@@ -1,52 +1,45 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { VideoGrid } from '@/components/video/VideoGrid';
 import { AdBanner } from '@/components/ads/AdBanner';
-import { useRecommendedVideos } from '@/hooks/useVideos';
-import { useAds } from '@/hooks/useAds';
+import { useYouTubeVideos } from '@/hooks/useYouTubeVideos';
+import { useAuth } from '@/components/auth/AuthProvider';
 
 interface HomePageProps {
   searchQuery?: string;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ searchQuery }) => {
-  const { data: videos, isLoading: videosLoading } = useRecommendedVideos();
-  const { data: ads } = useAds();
+  const { data: videos, isLoading } = useYouTubeVideos(searchQuery);
+  const { user, isGuest } = useAuth();
 
   return (
-    <div className="space-y-8">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-red-500 to-red-600 text-white p-8 rounded-xl">
-        <div className="max-w-4xl">
-          <h1 className="text-4xl font-bold mb-4">Welcome to VidTube</h1>
-          <p className="text-xl opacity-90">
-            Discover amazing videos from creators around the world. 
-            Upload, share, and enjoy unlimited entertainment.
-          </p>
-        </div>
-      </div>
-
-      {/* Ads Section */}
-      {ads && ads.length > 0 && (
-        <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-gray-900">Sponsored Content</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {ads.map((ad) => (
-              <AdBanner key={ad.id} ad={ad} />
-            ))}
+    <div className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-black">
+      <div className="container mx-auto px-4 py-6">
+        {!searchQuery && (
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+              {isGuest ? 'Trending Videos' : 'Welcome back!'}
+            </h1>
+            <AdBanner />
           </div>
-        </div>
-      )}
+        )}
+        
+        {searchQuery && (
+          <div className="mb-6">
+            <h2 className="text-2xl font-semibold text-white">
+              Search results for "{searchQuery}"
+            </h2>
+          </div>
+        )}
 
-      {/* Videos Section */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-900">
-            {searchQuery ? `Search results for "${searchQuery}"` : 'Recommended for you'}
-          </h2>
-        </div>
-
-        <VideoGrid videos={videos || []} loading={videosLoading} />
+        <VideoGrid videos={videos || []} loading={isLoading} />
+        
+        {!isLoading && videos && videos.length > 6 && (
+          <div className="mt-8">
+            <AdBanner />
+          </div>
+        )}
       </div>
     </div>
   );

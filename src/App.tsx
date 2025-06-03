@@ -9,22 +9,24 @@ import { AuthProvider, useAuth } from "@/components/auth/AuthProvider";
 import { AuthPage } from "@/components/auth/AuthPage";
 import { MainLayout } from "@/pages/MainLayout";
 import { HomePage } from "@/pages/HomePage";
+import { HistoryPage } from "@/pages/HistoryPage";
+import { DashboardPage } from "@/pages/DashboardPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth();
+  const { user, isGuest, loading } = useAuth();
   
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+      <div className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-black flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400"></div>
       </div>
     );
   }
   
-  if (!user) {
+  if (!user && !isGuest) {
     return <Navigate to="/auth" replace />;
   }
   
@@ -32,17 +34,17 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth();
+  const { user, isGuest, loading } = useAuth();
   
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+      <div className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-black flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400"></div>
       </div>
     );
   }
   
-  if (user) {
+  if (user || isGuest) {
     return <Navigate to="/" replace />;
   }
   
@@ -75,7 +77,8 @@ const App = () => (
             >
               <Route index element={<HomePage />} />
               <Route path="trending" element={<div className="p-8 text-center text-gray-500">Trending page coming soon...</div>} />
-              <Route path="history" element={<div className="p-8 text-center text-gray-500">History page coming soon...</div>} />
+              <Route path="history" element={<HistoryPage />} />
+              <Route path="dashboard" element={<DashboardPage />} />
               <Route path="upload" element={<div className="p-8 text-center text-gray-500">Upload page coming soon...</div>} />
               <Route path="profile" element={<div className="p-8 text-center text-gray-500">Profile page coming soon...</div>} />
               <Route path="watch/:id" element={<div className="p-8 text-center text-gray-500">Video player coming soon...</div>} />
