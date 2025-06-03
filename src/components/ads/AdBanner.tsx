@@ -18,6 +18,10 @@ interface AdBannerProps {
 }
 
 export const AdBanner: React.FC<AdBannerProps> = ({ ad, className }) => {
+  if (!ad) {
+    return null;
+  }
+
   const handleClick = () => {
     if (ad.click_url) {
       window.open(ad.click_url, '_blank');
