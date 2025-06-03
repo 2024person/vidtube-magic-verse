@@ -52,36 +52,50 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-black text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   }
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar with neon theme */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, #06b6d4, #8b5cf6);
   border-radius: 4px;
+  box-shadow: 0 0 5px rgba(6, 182, 212, 0.3);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #0891b2, #7c3aed);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
 }
 
-/* Neon glow effects */
+/* Enhanced neon glow effects */
 .neon-glow {
-  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3), 0 0 40px rgba(139, 92, 246, 0.2);
+  box-shadow: 
+    0 0 20px rgba(6, 182, 212, 0.3), 
+    0 0 40px rgba(139, 92, 246, 0.2),
+    inset 0 0 20px rgba(6, 182, 212, 0.1);
 }
 
 .neon-text {
-  text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+  text-shadow: 
+    0 0 10px rgba(6, 182, 212, 0.5),
+    0 0 20px rgba(139, 92, 246, 0.3),
+    0 0 30px rgba(6, 182, 212, 0.2);
+}
+
+.neon-border {
+  border: 1px solid transparent;
+  background: linear-gradient(black, black) padding-box,
+              linear-gradient(45deg, #06b6d4, #8b5cf6) border-box;
 }
 
 /* Animation classes */
@@ -113,7 +127,27 @@
   }
 }
 
-/* Custom line-clamp for better text truncation */
+.pulse-glow {
+  animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(6, 182, 212, 0.6), 0 0 40px rgba(139, 92, 246, 0.4);
+  }
+}
+
+/* Enhanced line-clamp for better text truncation */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;
@@ -126,4 +160,25 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+}
+
+/* Custom gradient backgrounds */
+.bg-neon-gradient {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+}
+
+.bg-neon-gradient-dark {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(139, 92, 246, 0.1) 50%, rgba(6, 182, 212, 0.1) 100%);
+}
+
+/* Hover effects for interactive elements */
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 
+    0 0 20px rgba(6, 182, 212, 0.4),
+    0 0 40px rgba(139, 92, 246, 0.3);
+  transform: translateY(-2px);
 }
