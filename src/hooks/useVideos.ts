@@ -1,5 +1,4 @@
 
-import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -18,7 +17,9 @@ interface Video {
   created_at: string;
 }
 
-export const useVideos = (searchQuery?: string, genre?: string) => {
+type VideoGenre = 'action' | 'comedy' | 'drama' | 'horror' | 'sci-fi' | 'documentary' | 'music' | 'sports' | 'gaming' | 'education' | 'news' | 'entertainment';
+
+export const useVideos = (searchQuery?: string, genre?: VideoGenre) => {
   const { user } = useAuth();
 
   return useQuery({

@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -64,7 +65,14 @@ const App = () => (
                 </PublicRoute>
               } 
             />
-            <Route path="/" element={<MainLayout />}>
+            <Route 
+              path="/" 
+              element={
+                <ProtectedRoute>
+                  <MainLayout />
+                </ProtectedRoute>
+              }
+            >
               <Route index element={<HomePage />} />
               <Route path="trending" element={<div className="p-8 text-center text-gray-500">Trending page coming soon...</div>} />
               <Route path="history" element={<div className="p-8 text-center text-gray-500">History page coming soon...</div>} />
