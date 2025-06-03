@@ -9,16 +9,360 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      ads: {
+        Row: {
+          ad_type: Database["public"]["Enums"]["ad_type"]
+          click_url: string | null
+          content: string | null
+          created_at: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          target_genres: Database["public"]["Enums"]["video_genre"][] | null
+          title: string
+          video_url: string | null
+        }
+        Insert: {
+          ad_type: Database["public"]["Enums"]["ad_type"]
+          click_url?: string | null
+          content?: string | null
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          target_genres?: Database["public"]["Enums"]["video_genre"][] | null
+          title: string
+          video_url?: string | null
+        }
+        Update: {
+          ad_type?: Database["public"]["Enums"]["ad_type"]
+          click_url?: string | null
+          content?: string | null
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          target_genres?: Database["public"]["Enums"]["video_genre"][] | null
+          title?: string
+          video_url?: string | null
+        }
+        Relationships: []
+      }
+      comments: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          likes_count: number | null
+          parent_id: string | null
+          updated_at: string | null
+          user_id: string | null
+          video_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          likes_count?: number | null
+          parent_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          video_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          likes_count?: number | null
+          parent_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          video_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
+            referencedRelation: "videos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      likes: {
+        Row: {
+          comment_id: string | null
+          created_at: string | null
+          id: string
+          is_like: boolean
+          user_id: string | null
+          video_id: string | null
+        }
+        Insert: {
+          comment_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_like: boolean
+          user_id?: string | null
+          video_id?: string | null
+        }
+        Update: {
+          comment_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_like?: boolean
+          user_id?: string | null
+          video_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "likes_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "likes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "likes_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
+            referencedRelation: "videos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          full_name: string | null
+          id: string
+          preferred_genres: Database["public"]["Enums"]["video_genre"][] | null
+          updated_at: string | null
+          username: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id: string
+          preferred_genres?: Database["public"]["Enums"]["video_genre"][] | null
+          updated_at?: string | null
+          username: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+          preferred_genres?: Database["public"]["Enums"]["video_genre"][] | null
+          updated_at?: string | null
+          username?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          channel_id: string | null
+          created_at: string | null
+          id: string
+          subscriber_id: string | null
+        }
+        Insert: {
+          channel_id?: string | null
+          created_at?: string | null
+          id?: string
+          subscriber_id?: string | null
+        }
+        Update: {
+          channel_id?: string | null
+          created_at?: string | null
+          id?: string
+          subscriber_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscriptions_subscriber_id_fkey"
+            columns: ["subscriber_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      videos: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          dislikes_count: number | null
+          duration: number | null
+          genre: Database["public"]["Enums"]["video_genre"]
+          id: string
+          is_uploaded: boolean | null
+          likes_count: number | null
+          tags: string[] | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string | null
+          uploader_id: string | null
+          video_url: string
+          views_count: number | null
+          youtube_video_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          dislikes_count?: number | null
+          duration?: number | null
+          genre: Database["public"]["Enums"]["video_genre"]
+          id?: string
+          is_uploaded?: boolean | null
+          likes_count?: number | null
+          tags?: string[] | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string | null
+          uploader_id?: string | null
+          video_url: string
+          views_count?: number | null
+          youtube_video_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          dislikes_count?: number | null
+          duration?: number | null
+          genre?: Database["public"]["Enums"]["video_genre"]
+          id?: string
+          is_uploaded?: boolean | null
+          likes_count?: number | null
+          tags?: string[] | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string | null
+          uploader_id?: string | null
+          video_url?: string
+          views_count?: number | null
+          youtube_video_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "videos_uploader_id_fkey"
+            columns: ["uploader_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      watch_history: {
+        Row: {
+          id: string
+          user_id: string | null
+          video_id: string | null
+          watch_duration: number | null
+          watched_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          video_id?: string | null
+          watch_duration?: number | null
+          watched_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          video_id?: string | null
+          watch_duration?: number | null
+          watched_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "watch_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "watch_history_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
+            referencedRelation: "videos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_recommended_videos: {
+        Args: { user_id: string; limit_count?: number }
+        Returns: {
+          id: string
+          title: string
+          description: string
+          thumbnail_url: string
+          video_url: string
+          duration: number
+          views_count: number
+          likes_count: number
+          genre: Database["public"]["Enums"]["video_genre"]
+          uploader_username: string
+          created_at: string
+        }[]
+      }
+      increment_video_views: {
+        Args: { video_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
-      [_ in never]: never
+      ad_type: "banner" | "video" | "sponsored"
+      video_genre:
+        | "action"
+        | "comedy"
+        | "drama"
+        | "horror"
+        | "sci-fi"
+        | "documentary"
+        | "music"
+        | "sports"
+        | "gaming"
+        | "education"
+        | "news"
+        | "entertainment"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +477,22 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      ad_type: ["banner", "video", "sponsored"],
+      video_genre: [
+        "action",
+        "comedy",
+        "drama",
+        "horror",
+        "sci-fi",
+        "documentary",
+        "music",
+        "sports",
+        "gaming",
+        "education",
+        "news",
+        "entertainment",
+      ],
+    },
   },
 } as const
