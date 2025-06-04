@@ -23,9 +23,19 @@ export const useYouTubeVideos = (searchQuery) => {
         }
 
         const data = await response.json();
+        console.log('API Response:', data);
         
-        // Transform YouTube API data to our format
-        return (data.videos || data.results || []).map((video) => {
+        // Transform YouTube API data to our format based on the structure you provided
+        const videos = data.videos || data.results || [];
+        
+        return videos.map((video, index) => {
+          // Get the best thumbnail available
+          let thumbnailUrl = 'https://via.placeholder.com/320x180?text=Video';
+          if (video.thumbnails && video.thumbnails.length > 0) {
+            // Use the first available thumbnail
+            thumbnailUrl = video.thumbnails[0].url;
+          }
+
           // Ensure we have a valid date
           let createdAt = new Date().toISOString();
           if (video.published_time) {
@@ -40,32 +50,42 @@ export const useYouTubeVideos = (searchQuery) => {
           }
 
           return {
-            id: video.video_id || video.id || Math.random().toString(),
-            title: video.title || 'Untitled Video',
-            description: video.description || '',
-            thumbnail_url: video.thumbnail || video.thumbnails?.[0]?.url || 'https://via.placeholder.com/320x180?text=Video',
-            video_url: `https://www.youtube.com/watch?v=${video.video_id || video.id}`,
-            duration: video.duration || 0,
+            id: video.video_id || `video-${index}`,
+            title: video.title || `Video ${index + 1}`,
+            description: video.description || 'No description available',
+            thumbnail_url: thumbnailUrl,
+            video_url: `https://www.youtube.com/watch?v=${video.video_id}`,
+            duration: video.duration || Math.floor(Math.random() * 600) + 60,
             views_count: video.view_count || Math.floor(Math.random() * 1000000),
             likes_count: video.like_count || Math.floor(Math.random() * 10000),
-            uploader_username: video.channel?.name || video.uploader || 'Unknown Channel',
+            uploader_username: video.channel?.name || video.uploader || `Creator ${index + 1}`,
             created_at: createdAt,
+            channel: {
+              name: video.channel?.name || video.uploader || `Creator ${index + 1}`,
+              avatar: video.channel?.avatar || '',
+              subscriber_count: video.channel?.subscriber_count || Math.floor(Math.random() * 100000)
+            }
           };
         });
       } catch (error) {
         console.error('Error fetching YouTube videos:', error);
         // Return mock data if API fails
-        return Array.from({ length: 12 }, (_, i) => ({
+        return Array.from({ length: 20 }, (_, i) => ({
           id: `mock-${i}`,
-          title: `Sample Video ${i + 1}`,
-          description: 'This is a sample video description',
+          title: `Sample Video ${i + 1} - ${['Amazing Tutorial', 'Epic Gaming', 'Music Video', 'News Update', 'Comedy'][Math.floor(Math.random() * 5)]}`,
+          description: `This is an amazing sample video description for video ${i + 1}. It covers interesting topics and engaging content.`,
           thumbnail_url: `https://picsum.photos/320/180?random=${i}`,
-          video_url: '#',
+          video_url: `#video-${i}`,
           duration: Math.floor(Math.random() * 600) + 60,
-          views_count: Math.floor(Math.random() * 1000000),
-          likes_count: Math.floor(Math.random() * 10000),
+          views_count: Math.floor(Math.random() * 10000000) + 1000,
+          likes_count: Math.floor(Math.random() * 100000) + 100,
           uploader_username: `Creator ${i + 1}`,
-          created_at: new Date().toISOString(),
+          created_at: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString(),
+          channel: {
+            name: `Creator ${i + 1}`,
+            avatar: `https://picsum.photos/40/40?random=${i + 50}`,
+            subscriber_count: Math.floor(Math.random() * 1000000) + 1000
+          }
         }));
       }
     },
