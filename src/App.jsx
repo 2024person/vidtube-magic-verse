@@ -13,7 +13,6 @@ import { HistoryPage } from "@/pages/HistoryPage";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { WatchPage } from "@/pages/WatchPage";
 import { TrendingPage } from "@/pages/TrendingPage";
-import { GenrePage } from "@/pages/GenrePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -78,10 +77,7 @@ const App = () => (
               React.createElement(Route, { path: "trending", element: React.createElement(TrendingPage) }),
               React.createElement(Route, { path: "history", element: React.createElement(HistoryPage) }),
               React.createElement(Route, { path: "dashboard", element: React.createElement(DashboardPage) }),
-              React.createElement(Route, { path: "upload", element: React.createElement("div", { className: "p-8 text-center text-cyan-400" }, "Upload page coming soon...") }),
-              React.createElement(Route, { path: "profile", element: React.createElement("div", { className: "p-8 text-center text-cyan-400" }, "Profile page coming soon...") }),
-              React.createElement(Route, { path: "watch/:id", element: React.createElement(WatchPage) }),
-              React.createElement(Route, { path: "genre/:genre", element: React.createElement(GenrePage) })
+              React.createElement(Route, { path: "watch/:id", element: React.createElement(WatchPage) })
             ),
             React.createElement(Route, { path: "*", element: React.createElement(NotFound) })
           )
