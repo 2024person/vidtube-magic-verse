@@ -7,7 +7,7 @@ export const VideoGrid = ({ videos, loading }) => {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="animate-pulse">
+          <div key={`loading-${i}`} className="animate-pulse">
             <div className="bg-gray-800/50 aspect-video rounded-lg mb-4 border border-cyan-500/20"></div>
             <div className="flex gap-3">
               <div className="w-9 h-9 bg-gray-800/50 rounded-full border border-cyan-500/20"></div>
@@ -34,8 +34,8 @@ export const VideoGrid = ({ videos, loading }) => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {videos.map((video) => (
-        <VideoCard key={video.id} video={video} />
+      {videos.map((video, index) => (
+        <VideoCard key={`${video.id}-${index}`} video={video} />
       ))}
     </div>
   );

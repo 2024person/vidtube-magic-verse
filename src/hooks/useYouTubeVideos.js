@@ -1,3 +1,4 @@
+
 import { useQuery } from '@tanstack/react-query';
 
 const RAPIDAPI_KEY = '8b468e9896msh42105a591d71b6dp155212jsn5988e0e9f851';
@@ -32,7 +33,6 @@ export const useYouTubeVideos = (searchQuery) => {
           // Get the best thumbnail available
           let thumbnailUrl = 'https://via.placeholder.com/320x180?text=Video';
           if (video.thumbnails && video.thumbnails.length > 0) {
-            // Use the first available thumbnail
             thumbnailUrl = video.thumbnails[0].url;
           }
 
@@ -50,7 +50,7 @@ export const useYouTubeVideos = (searchQuery) => {
           }
 
           return {
-            id: video.video_id || `video-${index}`,
+            id: video.video_id || `video-${Date.now()}-${index}`,
             title: video.title || `Video ${index + 1}`,
             description: video.description || 'No description available',
             thumbnail_url: thumbnailUrl,
@@ -71,7 +71,7 @@ export const useYouTubeVideos = (searchQuery) => {
         console.error('Error fetching YouTube videos:', error);
         // Return mock data if API fails
         return Array.from({ length: 20 }, (_, i) => ({
-          id: `mock-${i}`,
+          id: `mock-${Date.now()}-${i}`,
           title: `Sample Video ${i + 1} - ${['Amazing Tutorial', 'Epic Gaming', 'Music Video', 'News Update', 'Comedy'][Math.floor(Math.random() * 5)]}`,
           description: `This is an amazing sample video description for video ${i + 1}. It covers interesting topics and engaging content.`,
           thumbnail_url: `https://picsum.photos/320/180?random=${i}`,

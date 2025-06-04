@@ -36,7 +36,7 @@ export const AdBanner = ({ ad, className = '' }) => {
               alt={ad.title}
               className="w-full h-32 object-cover hover:scale-105 transition-transform duration-300"
               onError={(e) => {
-                // Fallback to a placeholder image if ad image fails to load
+                console.log('Image failed to load:', ad.image_url);
                 e.target.src = 'https://via.placeholder.com/600x200/1a1a2e/16a085?text=Advertisement';
               }}
             />
