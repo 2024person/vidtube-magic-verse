@@ -7,19 +7,19 @@ export const AdBanner = ({ position = 'top' }) => {
 
   if (isLoading) {
     return (
-      <div className="w-full h-24 bg-gray-800/50 border border-cyan-500/30 rounded-lg animate-pulse flex items-center justify-center">
+      <div className="w-full h-24 bg-gray-800/50 border border-cyan-500/30 rounded-lg animate-pulse flex items-center justify-center mb-6">
         <div className="text-cyan-400 text-sm">Loading ad...</div>
       </div>
     );
   }
 
-  // Mock ad data if no ads available
+  // Updated mock ads with actual images
   const mockAds = [
     {
       id: 'ad-1',
       title: 'Premium VidTube Pro',
       description: 'Upgrade to VidTube Pro for ad-free experience!',
-      image_url: 'https://picsum.photos/728/90?random=1',
+      image_url: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=728&h=90&fit=crop&crop=center',
       click_url: '#',
       position: 'top'
     },
@@ -27,7 +27,7 @@ export const AdBanner = ({ position = 'top' }) => {
       id: 'ad-2',
       title: 'Amazing Product Deal',
       description: 'Get 50% off on amazing products. Limited time offer!',
-      image_url: 'https://picsum.photos/728/90?random=2',
+      image_url: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=728&h=90&fit=crop&crop=center',
       click_url: '#',
       position: 'top'
     },
@@ -35,7 +35,7 @@ export const AdBanner = ({ position = 'top' }) => {
       id: 'ad-3',
       title: 'Learn Coding Online',
       description: 'Master programming with our interactive courses.',
-      image_url: 'https://picsum.photos/728/90?random=3',
+      image_url: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=728&h=90&fit=crop&crop=center',
       click_url: '#',
       position: 'top'
     }
@@ -67,20 +67,9 @@ export const AdBanner = ({ position = 'top' }) => {
               alt={selectedAd.title}
               className="w-full h-24 object-cover"
               onError={(e) => {
-                // Fallback gradient if image fails to load
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
+                e.target.src = 'https://via.placeholder.com/728x90/1a1a2e/16a085?text=Advertisement';
               }}
             />
-            <div 
-              className="hidden w-full h-24 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 items-center justify-center border border-cyan-500/30"
-              style={{ display: 'none' }}
-            >
-              <div className="text-center">
-                <h3 className="text-cyan-400 font-semibold text-lg">{selectedAd.title}</h3>
-                <p className="text-gray-300 text-sm">{selectedAd.description}</p>
-              </div>
-            </div>
           </div>
           
           <div className="p-3 bg-gray-900/70">

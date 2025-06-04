@@ -1,5 +1,6 @@
 import React from 'react';
 import { VideoGrid } from '@/components/video/VideoGrid';
+import { AdBanner } from '@/components/ads/AdBanner';
 import { useQuery } from '@tanstack/react-query';
 import { TrendingUp } from 'lucide-react';
 
@@ -24,7 +25,6 @@ const useTrendingVideos = () => {
         const data = await response.json();
         console.log('Trending API Response:', data);
         
-        // Transform the data to match our video format
         const videos = data.videos || data.results || [];
         
         return videos.map((video, index) => {
@@ -52,12 +52,12 @@ const useTrendingVideos = () => {
             thumbnail_url: thumbnailUrl,
             video_url: `https://www.youtube.com/watch?v=${video.video_id}`,
             duration: video.duration || Math.floor(Math.random() * 600) + 60,
-            views_count: video.view_count || Math.floor(Math.random() * 1000000),
-            likes_count: video.like_count || Math.floor(Math.random() * 10000),
-            uploader_username: video.channel?.name || video.uploader || `Trending Creator ${index + 1}`,
+            views_count: video.number_of_views || Math.floor(Math.random() * 1000000),
+            likes_count: Math.floor(Math.random() * 10000),
+            uploader_username: video.author || video.channel?.name || `Trending Creator ${index + 1}`,
             created_at: createdAt,
             channel: {
-              name: video.channel?.name || video.uploader || `Trending Creator ${index + 1}`,
+              name: video.author || video.channel?.name || `Trending Creator ${index + 1}`,
               avatar: video.channel?.avatar || '',
               subscriber_count: video.channel?.subscriber_count || Math.floor(Math.random() * 100000)
             }
@@ -65,7 +65,6 @@ const useTrendingVideos = () => {
         });
       } catch (error) {
         console.error('Error fetching trending videos:', error);
-        // Return mock trending data if API fails
         return Array.from({ length: 20 }, (_, i) => ({
           id: `trending-mock-${Date.now()}-${i}`,
           title: `Trending Video ${i + 1} - ${['Viral Challenge', 'Breaking News', 'Epic Moment', 'Must Watch', 'Amazing'][Math.floor(Math.random() * 5)]}`,
@@ -95,6 +94,8 @@ export const TrendingPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-black via-purple-900/80 to-black">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/10 via-transparent to-purple-900/10"></div>
       <div className="container mx-auto px-4 py-6 relative z-10">
+        <AdBanner position="top" />
+        
         <div className="flex items-center gap-3 mb-6">
           <TrendingUp className="h-8 w-8 text-cyan-400" />
           <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">

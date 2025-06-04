@@ -11,7 +11,7 @@ import { MainLayout } from "@/pages/MainLayout";
 import { HomePage } from "@/pages/HomePage";
 import { HistoryPage } from "@/pages/HistoryPage";
 import { DashboardPage } from "@/pages/DashboardPage";
-import { WatchPage } from "@/pages/WatchPage";
+import { VideoPlayer } from "@/components/video/VideoPlayer";
 import { TrendingPage } from "@/pages/TrendingPage";
 import NotFound from "./pages/NotFound";
 
@@ -77,7 +77,7 @@ const App = () => (
               React.createElement(Route, { path: "trending", element: React.createElement(TrendingPage) }),
               React.createElement(Route, { path: "history", element: React.createElement(HistoryPage) }),
               React.createElement(Route, { path: "dashboard", element: React.createElement(DashboardPage) }),
-              React.createElement(Route, { path: "watch/:id", element: React.createElement(WatchPage) })
+              React.createElement(Route, { path: "watch/:id", element: React.createElement(VideoPlayer) })
             ),
             React.createElement(Route, { path: "*", element: React.createElement(NotFound) })
           )
