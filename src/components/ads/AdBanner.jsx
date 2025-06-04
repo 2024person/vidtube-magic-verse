@@ -1,53 +1,94 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { ExternalLink } from 'lucide-react';
+import { useAds } from '@/hooks/useAds';
 
-export const AdBanner = ({ ad, className = '' }) => {
-  if (!ad) {
-    return null;
+export const AdBanner = ({ position = 'top' }) => {
+  const { data: ads, isLoading } = useAds();
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-24 bg-gray-800/50 border border-cyan-500/30 rounded-lg animate-pulse flex items-center justify-center">
+        <div className="text-cyan-400 text-sm">Loading ad...</div>
+      </div>
+    );
   }
 
-  const handleClick = () => {
-    if (ad.click_url) {
-      window.open(ad.click_url, '_blank');
+  // Mock ad data if no ads available
+  const mockAds = [
+    {
+      id: 'ad-1',
+      title: 'Premium VidTube Pro',
+      description: 'Upgrade to VidTube Pro for ad-free experience!',
+      image_url: 'https://picsum.photos/728/90?random=1',
+      click_url: '#',
+      position: 'top'
+    },
+    {
+      id: 'ad-2',
+      title: 'Amazing Product Deal',
+      description: 'Get 50% off on amazing products. Limited time offer!',
+      image_url: 'https://picsum.photos/728/90?random=2',
+      click_url: '#',
+      position: 'top'
+    },
+    {
+      id: 'ad-3',
+      title: 'Learn Coding Online',
+      description: 'Master programming with our interactive courses.',
+      image_url: 'https://picsum.photos/728/90?random=3',
+      click_url: '#',
+      position: 'top'
     }
-  };
+  ];
+
+  const currentAds = ads && ads.length > 0 ? ads : mockAds;
+  const filteredAds = currentAds.filter(ad => ad.position === position);
+  const selectedAd = filteredAds[Math.floor(Math.random() * filteredAds.length)];
+
+  if (!selectedAd) return null;
 
   return (
-    <Card 
-      className={`cursor-pointer hover:shadow-lg transition-all duration-300 border-cyan-500/30 bg-gradient-to-r from-gray-900/80 to-gray-800/80 backdrop-blur-sm hover:border-purple-500/50 hover:shadow-cyan-500/20 ${className}`}
-      onClick={handleClick}
-    >
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs text-cyan-400 font-medium bg-cyan-500/20 px-2 py-1 rounded border border-cyan-500/30">
-            Sponsored
-          </span>
-          {ad.click_url && (
-            <ExternalLink className="h-4 w-4 text-gray-400" />
-          )}
+    <div className="w-full mb-6">
+      <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 border border-cyan-500/30 rounded-lg overflow-hidden backdrop-blur-sm">
+        <div className="flex items-center justify-between p-2">
+          <span className="text-xs text-gray-400 uppercase tracking-wide">Advertisement</span>
+          <button className="text-gray-400 hover:text-cyan-400 text-xs">×</button>
         </div>
         
-        {ad.image_url && (
-          <div className="mb-3 rounded-lg overflow-hidden border border-cyan-500/20">
+        <a 
+          href={selectedAd.click_url}
+          className="block hover:opacity-80 transition-opacity"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div className="relative">
             <img
-              src={ad.image_url}
-              alt={ad.title}
-              className="w-full h-32 object-cover hover:scale-105 transition-transform duration-300"
+              src={selectedAd.image_url}
+              alt={selectedAd.title}
+              className="w-full h-24 object-cover"
               onError={(e) => {
-                console.log('Image failed to load:', ad.image_url);
-                e.target.src = 'https://via.placeholder.com/600x200/1a1a2e/16a085?text=Advertisement';
+                // Fallback gradient if image fails to load
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
               }}
             />
+            <div 
+              className="hidden w-full h-24 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 items-center justify-center border border-cyan-500/30"
+              style={{ display: 'none' }}
+            >
+              <div className="text-center">
+                <h3 className="text-cyan-400 font-semibold text-lg">{selectedAd.title}</h3>
+                <p className="text-gray-300 text-sm">{selectedAd.description}</p>
+              </div>
+            </div>
           </div>
-        )}
-        
-        <h3 className="font-semibold text-sm mb-1 text-white">{ad.title}</h3>
-        {ad.content && (
-          <p className="text-xs text-gray-300 line-clamp-2">{ad.content}</p>
-        )}
-      </CardContent>
-    </Card>
+          
+          <div className="p-3 bg-gray-900/70">
+            <h3 className="text-cyan-400 font-semibold text-sm mb-1">{selectedAd.title}</h3>
+            <p className="text-gray-300 text-xs">{selectedAd.description}</p>
+          </div>
+        </a>
+      </div>
+    </div>
   );
 };

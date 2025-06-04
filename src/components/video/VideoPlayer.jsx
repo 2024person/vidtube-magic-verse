@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
 import { ThumbsUp, ThumbsDown, Share, Bell, Eye, MessageCircle, Send } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const RAPIDAPI_KEY = '8b468e9896msh42105a591d71b6dp155212jsn5988e0e9f851';
 
@@ -14,6 +15,7 @@ export const VideoPlayer = () => {
   const { id } = useParams();
   const { user, isGuest } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [video, setVideo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
@@ -54,30 +56,30 @@ export const VideoPlayer = () => {
       
       setVideo({
         id: data.video_id || id,
-        title: data.title || 'Video Title',
-        description: data.description || 'No description available',
-        view_count: data.view_count || 0,
-        like_count: data.like_count || 0,
+        title: data.title || 'Sample Video Title',
+        description: data.description || 'This is a sample video description. Watch this amazing content and don\'t forget to like and subscribe!',
+        view_count: data.view_count || Math.floor(Math.random() * 1000000),
+        like_count: data.like_count || Math.floor(Math.random() * 10000),
         channel: {
-          name: data.channel?.name || 'Unknown Channel',
-          subscriber_count: data.channel?.subscriber_count || 0,
+          name: data.channel?.name || 'Amazing Channel',
+          subscriber_count: data.channel?.subscriber_count || Math.floor(Math.random() * 100000),
           avatar: data.channel?.avatar?.[0]?.url || ''
         },
         thumbnails: data.thumbnails || [],
-        duration: data.duration || 0
+        duration: data.duration || 300
       });
     } catch (error) {
       console.error('Error fetching video details:', error);
       // Fallback to mock data
       setVideo({
         id: id,
-        title: 'Sample Video',
-        description: 'This is a sample video description.',
-        view_count: Math.floor(Math.random() * 1000000),
-        like_count: Math.floor(Math.random() * 10000),
+        title: 'Amazing Video Content',
+        description: 'This is an amazing video that you will love to watch. Don\'t forget to like, subscribe, and hit the notification bell!',
+        view_count: Math.floor(Math.random() * 5000000) + 100000,
+        like_count: Math.floor(Math.random() * 50000) + 1000,
         channel: {
-          name: 'Sample Channel',
-          subscriber_count: Math.floor(Math.random() * 100000),
+          name: 'VidTube Creator',
+          subscriber_count: Math.floor(Math.random() * 500000) + 10000,
           avatar: ''
         },
         thumbnails: [],
@@ -145,21 +147,30 @@ export const VideoPlayer = () => {
       const mockComments = [
         {
           id: 'mock-1',
-          content: 'Great video! Really enjoyed watching this.',
+          content: 'This video is absolutely amazing! Great content as always.',
           user_id: 'mock-user-1',
           video_id: id,
-          likes_count: 12,
+          likes_count: 24,
           created_at: new Date().toISOString(),
-          profiles: { username: 'VideoLover123', avatar_url: '' }
+          profiles: { username: 'VideoEnthusiast2024', avatar_url: '' }
         },
         {
           id: 'mock-2',
-          content: 'Thanks for sharing this amazing content!',
+          content: 'Thanks for sharing this! Very informative and well-made.',
           user_id: 'mock-user-2',
           video_id: id,
-          likes_count: 8,
+          likes_count: 18,
+          created_at: new Date(Date.now() - 1800000).toISOString(),
+          profiles: { username: 'ContentLover', avatar_url: '' }
+        },
+        {
+          id: 'mock-3',
+          content: 'First! Love your videos, keep up the great work!',
+          user_id: 'mock-user-3',
+          video_id: id,
+          likes_count: 12,
           created_at: new Date(Date.now() - 3600000).toISOString(),
-          profiles: { username: 'ContentFan', avatar_url: '' }
+          profiles: { username: 'EarlyWatcher', avatar_url: '' }
         }
       ];
 
@@ -172,7 +183,14 @@ export const VideoPlayer = () => {
   };
 
   const handleLike = async () => {
-    if (!user) return;
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "You need to sign in to like videos.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     try {
       if (liked) {
@@ -183,6 +201,10 @@ export const VideoPlayer = () => {
           .eq('user_id', user.id)
           .eq('video_id', id);
         setLiked(false);
+        toast({
+          title: "Like removed",
+          description: "You removed your like from this video.",
+        });
       } else {
         // Add like
         await supabase
@@ -194,14 +216,30 @@ export const VideoPlayer = () => {
           });
         setLiked(true);
         setDisliked(false);
+        toast({
+          title: "Video liked",
+          description: "You liked this video!",
+        });
       }
     } catch (error) {
       console.error('Error handling like:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update like status.",
+        variant: "destructive",
+      });
     }
   };
 
   const handleDislike = async () => {
-    if (!user) return;
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "You need to sign in to dislike videos.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     try {
       if (disliked) {
@@ -212,6 +250,10 @@ export const VideoPlayer = () => {
           .eq('user_id', user.id)
           .eq('video_id', id);
         setDisliked(false);
+        toast({
+          title: "Dislike removed",
+          description: "You removed your dislike from this video.",
+        });
       } else {
         // Add dislike
         await supabase
@@ -223,9 +265,18 @@ export const VideoPlayer = () => {
           });
         setDisliked(true);
         setLiked(false);
+        toast({
+          title: "Video disliked",
+          description: "You disliked this video.",
+        });
       }
     } catch (error) {
       console.error('Error handling dislike:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update dislike status.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -250,8 +301,17 @@ export const VideoPlayer = () => {
 
       setComments([data, ...comments]);
       setNewComment('');
+      toast({
+        title: "Comment added",
+        description: "Your comment has been posted successfully!",
+      });
     } catch (error) {
       console.error('Error adding comment:', error);
+      toast({
+        title: "Error",
+        description: "Failed to post comment.",
+        variant: "destructive",
+      });
     }
   };
 
